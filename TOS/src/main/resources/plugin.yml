@@ -1,6 +1,6 @@
 name: TOS
 main: io.github.stefnotch.tos.TOS
-version: 1.8-R0.1-SNAPSHOT
+version: 1.0
 commands:
    basic:
       description: This is a demo command.

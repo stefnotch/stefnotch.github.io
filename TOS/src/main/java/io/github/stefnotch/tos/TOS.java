@@ -18,7 +18,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-//import org.bukkit.scheduler.BukkitScheduler;
+
 
 public class TOS extends JavaPlugin {
 	// Role, Visible to, Alive/Dead/Grave, Killer, cButtonClick: boolean, onTrial (Counter)
@@ -33,7 +33,7 @@ public class TOS extends JavaPlugin {
 	private static TOS tos;
 	private static World w;
 	static Random random = new Random();
-
+	
 	@Override
 	public void onEnable() {
 		tos = this;
@@ -50,7 +50,8 @@ public class TOS extends JavaPlugin {
 	public void onDisable() {
 
 	}
-
+	
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// If the player typed basic...
@@ -212,6 +213,7 @@ public class TOS extends JavaPlugin {
 			 * nbtBook.set("pages", list); // Set the compound to the NMS book bookItem.setTag(nbtBook); // GIVE HIM THE BOOK player.getInventory
 			 * ().addItem(CraftItemStack.asCraftMirror(bookItem));
 			 */
+	
 		}
 
 		// 20 = delay, 20 = delay between calls
@@ -222,6 +224,7 @@ public class TOS extends JavaPlugin {
 		 * String[][] guiString = { { playerArray[0][0] }, { "30", "-0.5", "Yes", "b" }, { "-30", "-0.5", "Of course", "b" },{ "0", "1.5",
 		 * "Is Meow awesome?", "t" } };
 		 */
+	
 		// TOSGUI gui = new TOSGUI(guiString);
 
 		// TODO MAIN GAME LOGIC HERE
