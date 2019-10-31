@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Happy Halloween!</title>
+    <meta name="author" content="Stefnotch" />
+
+    <style>
+      html,
+      head,
+      body {
+        margin: 0px;
+        padding: 0px;
+        background: black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .container-center {
+        margin: 0px;
+        padding: 0px;
+        position: relative;
+        display: flex;
+        overflow: hidden;
+      }
+      img {
+        height: 100vh;
+      }
+      #background {
+        object-fit: cover;
+      }
+      #foreground-large {
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation: largeAnimation 10s infinite 0s linear;
+        transform-origin: 50% 50%;
+      }
+      #foreground-small {
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation: smallAnimation 10s infinite 0s linear;
+        transform-origin: 75% 75%;
+      }
+      /*
+      var css = "\n";
+
+function randNum(min,max) { return (Math.random() * (max - min) + min).toFixed(3);}
+
+for(var i =0; i<10; i++) {
+  css+=`${i*10}% {
+  transform: rotate(${randNum(5,12)}deg) translateX(${randNum(-10,30)}px) translateY(${randNum(-10,30)}px);
+}
+`;
+}*/
+
+      @keyframes largeAnimation {
+        0% {
+          transform: rotate(8.153deg) translateX(0.703px) translateY(12.463px);
+        }
+        10% {
+          transform: rotate(8.006deg) translateX(1.421px) translateY(25.448px);
+        }
+        20% {
+          transform: rotate(5.431deg) translateX(0.86px) translateY(24.187px);
+        }
+        30% {
+          transform: rotate(8.51deg) translateX(-5.643px) translateY(22.357px);
+        }
+        40% {
+          transform: rotate(7.637deg) translateX(8.378px) translateY(21.895px);
+        }
+        50% {
+          transform: rotate(6.888deg) translateX(-2.957px) translateY(10.925px);
+        }
+        60% {
+          transform: rotate(9.552deg) translateX(4.234px) translateY(12.429px);
+        }
+        70% {
+          transform: rotate(9.842deg) translateX(1.694px) translateY(-9.005px);
+        }
+        80% {
+          transform: rotate(6.425deg) translateX(15.546px) translateY(-0.753px);
+        }
+        90% {
+          transform: rotate(11.488deg) translateX(28.219px) translateY(12.386px);
+        }
+        100% {
+          transform: rotate(8.153deg) translateX(0.703px) translateY(12.463px);
+        }
+      }
+
+      @keyframes smallAnimation {
+        0% {
+          transform: rotate(-0.452deg) translateX(-13.216px)
+            translateY(-13.972px);
+        }
+        10% {
+          transform: rotate(2.104deg) translateX(-1.337px) translateY(7.072px);
+        }
+        20% {
+          transform: rotate(-4.195deg) translateX(8.953px) translateY(-6.594px);
+        }
+        30% {
+          transform: rotate(4.301deg) translateX(1.913px) translateY(-1.133px);
+        }
+        40% {
+          transform: rotate(0.75deg) translateX(6.884px) translateY(-3.884px);
+        }
+        50% {
+          transform: rotate(1.399deg) translateX(-11.24px) translateY(14.525px);
+        }
+        60% {
+          transform: rotate(-3.073deg) translateX(-10.334px) translateY(5.329px);
+        }
+        70% {
+          transform: rotate(2.463deg) translateX(5.296px) translateY(-7.922px);
+        }
+        80% {
+          transform: rotate(0.059deg) translateX(12.918px) translateY(6.164px);
+        }
+        90% {
+          transform: rotate(0.346deg) translateX(-4.453px) translateY(-13.924px);
+        }
+        100% {
+          transform: rotate(-0.452deg) translateX(-13.216px)
+            translateY(-13.972px);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container-center">
+      <img src="Spoopy Ghost Cats Background.png" id="background" />
+      <img src="Spoopy Ghost Cats Foreground Large.png" id="foreground-large" />
+      <img src="Spoopy Ghost Cats Foreground Small.png" id="foreground-small" />
+    </div>
+  </body>
+</html>
