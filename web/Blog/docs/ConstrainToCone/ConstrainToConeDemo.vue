@@ -13,16 +13,62 @@ import {
   nextTick,
   PropType,
 } from "vue";
-import Two from "two.js";
+import Konva from "konva/konva";
 
 export default defineComponent({
   setup(props, context) {
-    const drawingArea = ref<HTMLElement>(null);
+    const drawingArea = ref<HTMLDivElement>(null);
     const scaleUpFactor = 100;
 
     onMounted(() => {
-      let two = new Two({ width: 285, height: 210 }).appendTo(
-        drawingArea.value
+      let stage = new Konva.Stage({
+        container: drawingArea.value,
+        width: 285,
+        height: 210,
+      });
+
+      let layer = new Konva.Layer({
+        offsetX: -stage.size().width / 2,
+        offsetY: -stage.size().height / 2,
+      });
+
+      let coneTip = new Konva.Circle({
+        radius: 10,
+        x: 1 * scaleUpFactor,
+        y: 0 * scaleUpFactor,
+        stroke: "blue",
+        draggable: true,
+      });
+
+      coneTip.on("dragmove", () => {
+        /* let mouse = stage.getPointerPosition();
+        mouse.x -= stage.size().width / 2;
+        mouse.y -= stage.size().height / 2;
+*/
+        let arrowPoints = coneArrow.points();
+        //      arrowPoints[2] = mouse.x;
+        //      arrowPoints[3] = mouse.y;
+
+        arrowPoints[2] = coneTip.x();
+        arrowPoints[3] = coneTip.y();
+        // TODO: Renormalize
+        coneArrow.points(arrowPoints);
+      });
+
+      let coneArrow = new Konva.Line({
+        points: [0, 0, 1 * scaleUpFactor, 0 * scaleUpFactor],
+        stroke: "blue",
+      });
+
+      layer.add(coneTip);
+      layer.add(coneArrow);
+
+      stage.add(layer);
+
+      /*
+
+      let two = new Two({  }).appendTo(
+        
       );
       let mouse = new Two.Vector();
 
@@ -84,7 +130,7 @@ export default defineComponent({
             aaaa.noStroke();
           }
         })
-        .play();
+        .play();*/
     });
 
     return {
