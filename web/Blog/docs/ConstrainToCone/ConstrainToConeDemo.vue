@@ -13,7 +13,35 @@ import {
   nextTick,
   PropType,
 } from "vue";
-import Konva from "konva/konva";
+import * as Pixi from "pixi.js";
+
+function pointerMove(
+  element: Pixi.Graphics,
+  callback: (point: Pixi.Point) => Pixi.Point
+) {
+  element
+    .on("pointerdown", function (event) {
+      this.data = event.data;
+      this.dragging = true;
+    })
+    .on("pointerup", function (event) {
+      this.dragging = false;
+      this.data = null;
+    })
+    .on("pointerupoutside", function (event) {
+      this.dragging = false;
+      this.data = null;
+    })
+    .on("pointermove", function (event) {
+      if (this.dragging) {
+        const newPosition =
+          callback(this.data.getLocalPosition(this.parent)) ??
+          new Pixi.Point(this.x, this.y);
+        this.x = newPosition.x;
+        this.y = newPosition.y;
+      }
+    });
+}
 
 export default defineComponent({
   setup(props, context) {
@@ -21,7 +49,55 @@ export default defineComponent({
     const scaleUpFactor = 100;
 
     onMounted(() => {
-      let stage = new Konva.Stage({
+      const app = new Pixi.Application({
+        width: 256,
+        height: 256,
+        backgroundColor: 0xffffff,
+        antialias: true,
+      });
+      drawingArea.value.appendChild(app.view);
+      app.stage.x += app.screen.width / 2;
+      app.stage.y += app.screen.height / 2;
+      app.stage.scale.y = -1;
+
+      let unitCircle = new Pixi.Graphics();
+      unitCircle
+        .lineStyle(1, 0x000000)
+        .beginFill(0xffffff)
+        .drawCircle(0, 0, 1 * scaleUpFactor)
+        .endFill();
+      app.stage.addChild(unitCircle);
+
+      const green = 0x32aa23;
+
+      let coneArrow = new Pixi.Graphics();
+      coneArrow.lineStyle(1, green).lineTo(0, 1 * scaleUpFactor); // TODO: text as well
+      app.stage.addChild(coneArrow);
+
+      let coneTip = new Pixi.Graphics();
+      coneTip
+        .beginFill(green)
+        .setTransform(0, 1 * scaleUpFactor)
+        .drawCircle(0, 0, 8)
+        .endFill();
+      coneTip.interactive = true;
+      coneTip.buttonMode = true;
+      pointerMove(coneTip, (point) => {
+        const length = Math.hypot(point.x, point.y);
+
+        const result = new Pixi.Point(
+          (point.x * scaleUpFactor) / length,
+          (point.y * scaleUpFactor) / length
+        );
+
+        coneArrow.clear();
+        coneArrow.lineStyle(1, green).lineTo(result.x, result.y);
+
+        return result;
+      });
+      app.stage.addChild(coneTip);
+
+      /*      let stage = new Konva.Stage({
         container: drawingArea.value,
         width: 285,
         height: 210,
@@ -38,20 +114,29 @@ export default defineComponent({
         y: 0 * scaleUpFactor,
         stroke: "blue",
         draggable: true,
+        dragBoundFunc: (pos) => {
+          console.log(pos);
+          const len = length(pos);
+
+          pos.x *= scaleUpFactor / len;
+          pos.y *= scaleUpFactor / len;
+
+          return pos;
+        },
       });
 
       coneTip.on("dragmove", () => {
-        /* let mouse = stage.getPointerPosition();
+         let mouse = stage.getPointerPosition();
         mouse.x -= stage.size().width / 2;
         mouse.y -= stage.size().height / 2;
-*/
+
         let arrowPoints = coneArrow.points();
         //      arrowPoints[2] = mouse.x;
         //      arrowPoints[3] = mouse.y;
 
         arrowPoints[2] = coneTip.x();
         arrowPoints[3] = coneTip.y();
-        // TODO: Renormalize
+        // Renormalize
         coneArrow.points(arrowPoints);
       });
 
@@ -63,7 +148,7 @@ export default defineComponent({
       layer.add(coneTip);
       layer.add(coneArrow);
 
-      stage.add(layer);
+      stage.add(layer);*/
 
       /*
 
