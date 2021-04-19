@@ -1,4 +1,9 @@
 <template>
+  <p>Cone Angle <input type="number" min="0" max="180" v-model="angle" /></p>
+  <p>
+    Cone Direction [{{ direction.x.toFixed(3) }}, {{ direction.y.toFixed(3) }}]
+  </p>
+  <p>Vector [{{ myVector.x.toFixed(3) }}, {{ myVector.y.toFixed(3) }}]</p>
   <div ref="drawing-area"></div>
 </template>
 
@@ -45,8 +50,15 @@ function pointerMove(
 
 export default defineComponent({
   setup(props, context) {
-    const drawingArea = ref<HTMLDivElement>(null);
+    const drawingArea = ref<HTMLDivElement | null>(null);
     const scaleUpFactor = 100;
+
+    // Cone angle
+    const angle = ref(60);
+    // Cone direction (normalized)
+    const direction = ref(new Pixi.Point(0, 1));
+    // My direction vector (to clamp)
+    const myVector = ref(new Pixi.Point(-0.2, -0.8));
 
     onMounted(() => {
       const app = new Pixi.Application({
@@ -55,171 +67,167 @@ export default defineComponent({
         backgroundColor: 0xffffff,
         antialias: true,
       });
-      drawingArea.value.appendChild(app.view);
+      drawingArea.value?.appendChild(app.view);
       app.stage.x += app.screen.width / 2;
       app.stage.y += app.screen.height / 2;
       app.stage.scale.y = -1;
 
       let unitCircle = new Pixi.Graphics();
       unitCircle
-        .lineStyle(1, 0x000000)
+        .lineStyle(2, 0x000000)
         .beginFill(0xffffff)
         .drawCircle(0, 0, 1 * scaleUpFactor)
         .endFill();
       app.stage.addChild(unitCircle);
 
-      const green = 0x32aa23;
+      // cone arrow
+      {
+        const green = 0x32aa23;
 
-      let coneArrow = new Pixi.Graphics();
-      coneArrow.lineStyle(1, green).lineTo(0, 1 * scaleUpFactor); // TODO: text as well
-      app.stage.addChild(coneArrow);
+        let coneArrow = new Pixi.Graphics();
+        watch(
+          [direction, angle],
+          ([dir, ang]) => {
+            coneArrow.clear();
 
-      let coneTip = new Pixi.Graphics();
-      coneTip
-        .beginFill(green)
-        .setTransform(0, 1 * scaleUpFactor)
-        .drawCircle(0, 0, 8)
-        .endFill();
-      coneTip.interactive = true;
-      coneTip.buttonMode = true;
-      pointerMove(coneTip, (point) => {
-        const length = Math.hypot(point.x, point.y);
+            coneArrow
+              .lineStyle(0)
+              .beginFill(0xffaaff, 0.5)
+              .arc(
+                0,
+                0,
+                0.99 * scaleUpFactor,
+                (-ang * Math.PI) / 180 + Math.atan2(dir.y, dir.x),
+                (ang * Math.PI) / 180 + Math.atan2(dir.y, dir.x)
+              )
+              .lineTo(0, 0)
+              .endFill();
 
-        const result = new Pixi.Point(
-          (point.x * scaleUpFactor) / length,
-          (point.y * scaleUpFactor) / length
-        );
-
-        coneArrow.clear();
-        coneArrow.lineStyle(1, green).lineTo(result.x, result.y);
-
-        return result;
-      });
-      app.stage.addChild(coneTip);
-
-      /*      let stage = new Konva.Stage({
-        container: drawingArea.value,
-        width: 285,
-        height: 210,
-      });
-
-      let layer = new Konva.Layer({
-        offsetX: -stage.size().width / 2,
-        offsetY: -stage.size().height / 2,
-      });
-
-      let coneTip = new Konva.Circle({
-        radius: 10,
-        x: 1 * scaleUpFactor,
-        y: 0 * scaleUpFactor,
-        stroke: "blue",
-        draggable: true,
-        dragBoundFunc: (pos) => {
-          console.log(pos);
-          const len = length(pos);
-
-          pos.x *= scaleUpFactor / len;
-          pos.y *= scaleUpFactor / len;
-
-          return pos;
-        },
-      });
-
-      coneTip.on("dragmove", () => {
-         let mouse = stage.getPointerPosition();
-        mouse.x -= stage.size().width / 2;
-        mouse.y -= stage.size().height / 2;
-
-        let arrowPoints = coneArrow.points();
-        //      arrowPoints[2] = mouse.x;
-        //      arrowPoints[3] = mouse.y;
-
-        arrowPoints[2] = coneTip.x();
-        arrowPoints[3] = coneTip.y();
-        // Renormalize
-        coneArrow.points(arrowPoints);
-      });
-
-      let coneArrow = new Konva.Line({
-        points: [0, 0, 1 * scaleUpFactor, 0 * scaleUpFactor],
-        stroke: "blue",
-      });
-
-      layer.add(coneTip);
-      layer.add(coneArrow);
-
-      stage.add(layer);*/
-
-      /*
-
-      let two = new Two({  }).appendTo(
-        
-      );
-      let mouse = new Two.Vector();
-
-      two.renderer.domElement.addEventListener(
-        "mousemove",
-        (e) => mouse.set(e.offsetX - two.width / 2, e.offsetY - two.height / 2),
-        false
-      );
-
-      let g = new Two.Group();
-      two.add(g);
-
-      let unitCircle = two.makeCircle(0, 0, 1 * scaleUpFactor);
-      unitCircle.stroke = "black";
-      g.add(unitCircle);
-
-      let cursorCircle = two.makeCircle(0, 0, 1);
-      cursorCircle.stroke = "black";
-      g.add(cursorCircle);
-
-      // TODO: make this one draggable
-      // TODO: Draw text to identify the paths
-      let coneArrow = two.makePath(
-        0,
-        0,
-        1 * scaleUpFactor,
-        0 * scaleUpFactor,
-        true
-      );
-      coneArrow.stroke = "lightgreen";
-      g.add(coneArrow);
-
-      let arbitraryVector = two.makePath(
-        0,
-        0,
-        0 * scaleUpFactor,
-        1 * scaleUpFactor,
-        true
-      );
-      console.log(arbitraryVector);
-      arbitraryVector.vertices[1].x = 20;
-      arbitraryVector.vertices[1].y = 20;
-      arbitraryVector.stroke = "blue";
-      g.add(arbitraryVector);
-
-      let aaaa = two.makeCircle(0, 0, 2);
-      g.add(aaaa);
-
-      g.translation.set(two.width / 2, two.height / 2);
-      two.render();
-
-      two
-        .bind("update", function (frameCount) {
-          cursorCircle.translation.set(mouse.x, mouse.y);
-
-          if (mouse.distanceTo(arbitraryVector.vertices[1]) < 10) {
-            aaaa.stroke = "red";
-          } else {
-            aaaa.noStroke();
+            coneArrow
+              .lineStyle(1, green)
+              .lineTo(dir.x * scaleUpFactor, dir.y * scaleUpFactor);
+          },
+          {
+            immediate: true,
           }
-        })
-        .play();*/
+        ); // TODO: text as well (when hovering over the corresponding thingy)
+        app.stage.addChild(coneArrow);
+
+        let coneTip = new Pixi.Graphics();
+        coneTip
+          .beginFill(green)
+          .setTransform(
+            direction.value.x * scaleUpFactor,
+            direction.value.y * scaleUpFactor
+          )
+          .drawCircle(0, 0, 8)
+          .endFill();
+        coneTip.interactive = true;
+        coneTip.buttonMode = true;
+        app.stage.addChild(coneTip);
+        pointerMove(coneTip, (point) => {
+          const length = Math.hypot(point.x, point.y);
+          direction.value = new Pixi.Point(point.x / length, point.y / length);
+
+          return new Pixi.Point(
+            direction.value.x * scaleUpFactor,
+            direction.value.y * scaleUpFactor
+          );
+        });
+      }
+
+      // my vector
+      {
+        const blue = 0x3232cc;
+        let myVectorArrow = new Pixi.Graphics();
+        watch(
+          myVector,
+          (value) => {
+            myVectorArrow.clear();
+            myVectorArrow
+              .lineStyle(1, blue)
+              .lineTo(value.x * scaleUpFactor, value.y * scaleUpFactor);
+          },
+          { immediate: true }
+        ); // TODO: text as well
+        app.stage.addChild(myVectorArrow);
+
+        let myVectorTip = new Pixi.Graphics();
+        myVectorTip
+          .beginFill(blue)
+          .setTransform(
+            myVector.value.x * scaleUpFactor,
+            myVector.value.y * scaleUpFactor
+          )
+          .drawCircle(0, 0, 8)
+          .endFill();
+        myVectorTip.interactive = true;
+        myVectorTip.buttonMode = true;
+        app.stage.addChild(myVectorTip);
+        pointerMove(myVectorTip, (point) => {
+          myVector.value = new Pixi.Point(
+            point.x / scaleUpFactor,
+            point.y / scaleUpFactor
+          );
+          return point;
+        });
+      }
+
+      // clamp to 90 degree
+      {
+        let clampToPie = new Pixi.Graphics();
+        const purple = 0xaa32bb;
+        watch(
+          [direction, angle, myVector],
+          ([dir, ang, vec]) => {
+            const length = Math.hypot(vec.x, vec.y);
+            const normalizedVec = new Pixi.Point(
+              vec.x / length,
+              vec.y / length
+            );
+            const dotProduct =
+              dir.x * normalizedVec.x + dir.y * normalizedVec.y; // We need normalized vectors to actually find an *angle*
+
+            const clampedToPie = new Pixi.Point(
+              vec.x - dir.x * dotProduct * length,
+              vec.y - dir.y * dotProduct * length
+            );
+
+            clampToPie.clear();
+            clampToPie
+              .lineStyle(1, purple)
+              .moveTo(vec.x * scaleUpFactor, vec.y * scaleUpFactor)
+              .lineTo(
+                clampedToPie.x * scaleUpFactor,
+                clampedToPie.y * scaleUpFactor
+              );
+
+            if (dotProduct > Math.cos((ang * Math.PI) / 180)) {
+              const lightBlue = 0xaaaaff;
+
+              clampToPie
+                .lineStyle(0)
+                .beginFill(lightBlue)
+                .drawCircle(vec.x * scaleUpFactor, vec.y * scaleUpFactor, 8)
+                .endFill();
+            }
+          },
+          {
+            immediate: true,
+          }
+        );
+        app.stage.addChild(clampToPie);
+      }
+
+      // TODO: Don't 'normalize' the entire vector at the end (since that would end up going too far :thinking:)
+      // TODO: normalizing after the 90 deg clamping works
     });
 
     return {
       "drawing-area": drawingArea,
+      angle,
+      direction,
+      myVector,
     };
   },
 });
