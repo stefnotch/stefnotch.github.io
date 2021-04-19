@@ -1,9 +1,8 @@
-# Constraining to a cone
+# Constraining to a cone\*
 
-## With unit vectors
+\*with the least amount of trigonometry
 
-$v = \text{Vector to clamp}$
-
+$v = \text{Vector to clamp}$  
 $u = \text{Clamping direction vector}$  
 $\alpha = \text{Clamping angle}$
 
@@ -19,8 +18,6 @@ Otherwise, we gotta clamp our vector towards u
 <ClientOnly>
   <Demo/>
 </ClientOnly>
-
-## With arbitrary vectors
 
 <script setup>
 import Demo from './ConstrainToConeDemo.vue'

@@ -211,6 +211,26 @@ export default defineComponent({
                 .drawCircle(vec.x * scaleUpFactor, vec.y * scaleUpFactor, 8)
                 .endFill();
             }
+
+            const clampedLength = Math.hypot(clampedToPie.x, clampedToPie.y);
+            const coneRadius = Math.sin((ang * Math.PI) / 180); // being on the unit circle is convenient as heck
+            const correctedToPie = new Pixi.Point(
+              (clampedToPie.x / clampedLength) * coneRadius,
+              (clampedToPie.y / clampedLength) * coneRadius
+            );
+
+            clampToPie
+              .lineStyle(1, purple)
+              .moveTo(0, 0)
+              .lineTo(
+                correctedToPie.x * scaleUpFactor,
+                correctedToPie.y * scaleUpFactor
+              )
+              .lineStyle(1, purple, 0.4)
+              .lineTo(
+                (correctedToPie.x / coneRadius) * scaleUpFactor,
+                (correctedToPie.y / coneRadius) * scaleUpFactor
+              );
           },
           {
             immediate: true,
