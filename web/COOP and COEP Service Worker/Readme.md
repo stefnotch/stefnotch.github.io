@@ -8,6 +8,12 @@ Ever since the rather impressive [Meltdown and Spectre](https://meltdownattack.c
 
 
 
+This means that certain web-applications have an additional hurdle to overcome.
+
+A few examples of web-applications that have this problem are in-browser video converters using [ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm), a web-based [notebook that supports Python](https://github.com/gzuidhof/starboard-notebook) and [multithreaded Emscripten applications](https://emscripten.org/docs/porting/pthreads.html).
+
+
+
 ## The Problem
 
 The following APIs are unavailable by default
@@ -25,7 +31,9 @@ To re-enable them, the site needs to be served over HTTPS<sup>[1]</sup>  and two
 
   
 
-This can be quite a challenge for any number of reasons. It is not always a walk in the park for a frontend developer to control the headers that the backend sends. A quite common one is using a CDN which simply doesn't support setting custom HTTP headers. My personal one was that I was deploying my site on GitHub pages.
+This can be quite a challenge for a number of reasons. It is not always a walk in the park for a frontend developer to control the headers that the backend sends. Static frontend applications are becoming more widespread. It is quite common that one uses a CDN which simply doesn't support setting custom HTTP headers. I personally needed a solution, as I was deploying [a web-based computer algebra system](https://stefnotch.github.io/quantum-sheet/) on GitHub pages.
+
+
 
 Finally, do note that those headers impose some additional restrictions. The main one is that the `Cross-Origin-Embedder-Policy` header makes it harder to load cross-origin resources. 
 
@@ -37,7 +45,7 @@ Finally, do note that those headers impose some additional restrictions. The mai
 
 
 
-## The Solution
+## What if I can't set the headers myself?
 
 **Service workers to the rescue!**
 
@@ -125,7 +133,7 @@ What this ends up doing is
 
 
 
-Of course the ideal solutions is still to set the headers server side. 
+Of course the ideal solution is still to set the headers server side. 
 
 
 
