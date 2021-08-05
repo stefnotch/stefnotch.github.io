@@ -82,6 +82,8 @@ if ("serviceWorker" in navigator) {
 
 Then, place the service worker right next to the script above and call it `sw.js`. The important part is that every time the `fetch` event listener is invoked, we replace the response with one where the COOP/COEP headers are set. All the other parts are optional.
 
+Do make sure that the service worker gets served from the topmost directory, right where the `index.html` of the website is. This makes sure that the service worker's scope includes all the files on your site.
+
 ```js
 // sw.js
 self.addEventListener("install", function () {
