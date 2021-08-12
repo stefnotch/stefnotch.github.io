@@ -107,8 +107,8 @@ self.addEventListener("fetch", function (event) {
         // if (!response.url.includes("index.html")) return response;
 
         const newHeaders = new Headers(response.headers);
-        newHeaders.append("Cross-Origin-Embedder-Policy", "require-corp");
-        newHeaders.append("Cross-Origin-Opener-Policy", "same-origin");
+        newHeaders.set("Cross-Origin-Embedder-Policy", "require-corp");
+        newHeaders.set("Cross-Origin-Opener-Policy", "same-origin");
 
         const moddedResponse = new Response(response.body, {
           status: response.status,
@@ -132,6 +132,10 @@ What this ends up doing is
 1. when the page gets loaded for the first time, we register the worker
 2. then we reload the page
 3. and finally, now that the worker is controlling everything, every request will now have the appropriate headers set
+
+
+
+I can quite recommend using the [`coi-serviceworker` library](https://github.com/gzuidhof/coi-serviceworker), which is based on this post and does exactly what is needed. 
 
 
 
