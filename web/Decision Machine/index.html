@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Leaving tough decision to someone else :3"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Decision Maker (powered by cats)</title>
+    <meta name="author" content="Stefnotch" />
+
+    <style>
+      #choicesElement {
+        display: flex;
+        flex-direction: column;
+      }
+      #choicesElement label {
+        padding: 6px 12px;
+      }
+      .paw {
+        margin-top: 25px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 0px;
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        background: rgb(255, 104, 162);
+        /*border-radius: 35px 35px 30px 30px / 50px 50px 20px 20px;*/
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      }
+      .jellybean {
+        position: absolute;
+        width: 15px;
+        height: 17px;
+        background: rgb(255, 104, 162);
+        /*border-radius: 35px 35px 30px 30px / 50px 50px 20px 20px;*/
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      }
+      .jellybean:nth-child(1) {
+        transform: translate(-5px, 0px) translate(-7.5px, 0px)
+          translate(-2px, -10px) rotate(-10deg);
+      }
+      .jellybean:nth-child(2) {
+        transform: translate(-5px, 0px) translate(-7.5px, 0px)
+          translate(11px, -23px) rotate(-10deg);
+      }
+      .jellybean:nth-child(3) {
+        transform: translate(-5px, 0px) translate(-7.5px, 0px)
+          translate(29px, -23px) rotate(10deg);
+      }
+      .jellybean:nth-child(4) {
+        transform: translate(-5px, 0px) translate(-7.5px, 0px)
+          translate(42px, -10px) rotate(10deg);
+      }
+      button {
+        position: relative;
+        border: 0px;
+      }
+      button:hover {
+        filter: hue-rotate(-50deg) saturate(120%);
+      }
+      button > .paw {
+        display: inline-block;
+        transform-origin: 0px 0px;
+        transform: scale(25%) translate(-10px, -70px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Enter your choices here:</h1>
+    <div id="choicesElement"></div>
+    <div>
+      <button onclick="decide()">
+        Paw Power!
+        <div class="paw">
+          <div class="jellybean"></div>
+          <div class="jellybean"></div>
+          <div class="jellybean"></div>
+          <div class="jellybean"></div>
+        </div>
+      </button>
+    </div>
+    <div id="result"></div>
+    <script defer>
+      let startingChoices = safeParse(getUrlParam("choices")) || ["", ""];
+
+      startingChoices.forEach((c) => {
+        choicesElement.appendChild(createChoiceElement(c));
+      });
+      function createChoiceElement(value) {
+        let label = document.createElement("label");
+        let inputEl = document.createElement("input");
+        inputEl.type = "text";
+        inputEl.placeholder = "";
+        inputEl.value = value ?? "";
+        inputEl.addEventListener("input", () => {
+          updateChoices();
+        });
+        inputEl.addEventListener("focus", () => {
+          updateChoices();
+        });
+        inputEl.addEventListener("keydown", (ev) => {
+          if (ev.key == "Backspace" || ev.key == "Delete") {
+            if (!inputEl.value) {
+              ev.preventDefault();
+              focusNextElement(-1);
+              label.parentNode.removeChild(label);
+              updateChoices();
+            }
+          } else if (ev.key == "Enter") {
+            focusNextElement();
+          }
+        });
+        label.appendChild(inputEl);
+
+        return label;
+      }
+
+      function updateChoices() {
+        let choices = getChoices();
+        setUrlParam("choices", JSON.stringify(choices));
+        if (choices[choices.length - 1]) {
+          choicesElement.appendChild(createChoiceElement());
+        }
+      }
+
+      function safeParse(value) {
+        try {
+          return JSON.parse(value);
+        } catch (e) {
+          return undefined;
+        }
+      }
+
+      function setUrlParam(key, value) {
+        let params = new URLSearchParams(window.location.search);
+        params.set(key, value);
+        let newUrl =
+          window.location.protocol +
+          "//" +
+          window.location.host +
+          window.location.pathname +
+          "?" +
+          params.toString();
+        window.history.pushState({ path: newUrl }, "", newUrl);
+      }
+
+      function getUrlParam(key) {
+        let params = new URLSearchParams(window.location.search);
+        return params.get(key);
+      }
+
+      function getChoices() {
+        let choiceInputs = [...choicesElement.querySelectorAll("input")];
+        return choiceInputs.map((v) => v.value);
+      }
+
+      function decide() {
+        let choices = getChoices();
+        let chosenOne = choices[Math.floor(Math.random() * choices.length)];
+        result.innerText = chosenOne;
+      }
+
+      document.addEventListener("keydown", (ev) => {
+        if (ev.key == "ArrowDown") {
+          focusNextElement();
+        } else if (ev.key == "ArrowUp") {
+          focusNextElement(-1);
+        }
+      });
+
+      // Source: https://stackoverflow.com/a/35173443/3492994
+      function focusNextElement(direction = 1) {
+        //add all elements we want to include in our selection
+        let focussableElements =
+          'a:not([disabled]), button:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+        if (document.activeElement) {
+          let focussable = Array.prototype.filter.call(
+            document.querySelectorAll(focussableElements),
+            function (element) {
+              //check for visibility while always include the current activeElement
+              return (
+                element.offsetWidth > 0 ||
+                element.offsetHeight > 0 ||
+                element === document.activeElement
+              );
+            }
+          );
+          let index = focussable.indexOf(document.activeElement);
+          if (index > -1) {
+            if (direction >= 0) {
+              let nextElement = focussable[index + direction] || focussable[0];
+              nextElement.focus();
+            } else {
+              let nextElement =
+                focussable[index + direction] ||
+                focussable[focussable.length - 1];
+              nextElement.focus();
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
