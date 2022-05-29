@@ -297,7 +297,8 @@ function handleInput(ev: KeyboardEvent) {
     </tbody>
   </table>
 
-  {{ solution }}
+  Solution in an arcane language understood by computer-wizards:
+  <pre>{{ solution }}</pre>
 </template>
 
 <style>
