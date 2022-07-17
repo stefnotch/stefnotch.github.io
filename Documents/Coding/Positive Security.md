@@ -13,3 +13,16 @@
 |      |                  |
 |      |                  |
 |      |                  |
+
+# Positive Terms
+
+| Term | Use this instead |
+|------|------------------|
+| Shooting     | Cooperative russian roulette                  |
+|      |                  |
+|      |                  |
+|      |                  |
+|      |                  |
+|      |                  |
+|      |                  |
+|      |                  |
