@@ -13,7 +13,7 @@ Well, I'm just going to run you through the options
 
 **And now, time for the GUIs**
 
-One major requirement is that they use the "branching" view by default. One that lets you see the commits, and the branches that exist at the moment.
+One major requirement is that they use the "branching" view by default. (`git log --graph`) One that lets you see the commits, and the branches that exist at the moment.
 
 Mostly everything else is unwieldy for bigger projects, and ends up not mapping quite as nicely to the "make lots of branches" Git workflow.
 
@@ -29,7 +29,7 @@ Mostly everything else is unwieldy for bigger projects, and ends up not mapping 
 
 - GitKraken: That's what I use at the moment. Issues include its startup time, its price (subscription model), the fact that it's slow when discarding thousands of changed files at once, ...
 
-- Most 3rd party GUIs out there ([kudos to Git for maintaining a lovely list](https://git-scm.com/downloads/guis) are either quite limited, abandoned, un-fun to use, are expensive paid software or have some combination of factors that make it a no-go. I'd know, I've checked out most of them. *If there's one that you think deserves a mention, do send it my way!*
+- Most 3rd party GUIs out there ([kudos to Git for maintaining a lovely list](https://git-scm.com/downloads/guis)) are either quite limited, abandoned, un-fun to use, are expensive paid software, only work on one operating system or have some combination of factors that make it a no-go. I'd know, I've checked out most of them. *If there's one that you think deserves a mention, do send it my way!*
  
 
 So, here we go. I think I've successfully complained about every option on the market.
