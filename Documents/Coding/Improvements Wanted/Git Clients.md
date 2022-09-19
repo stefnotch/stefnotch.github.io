@@ -27,7 +27,7 @@ Mostly everything else is unwieldy for bigger projects, and ends up not mapping 
 
 - Git Fork: Quite lovely. One catch is that the name makes it terribly difficult to look up anything at all if you've got a question. Like seriously, try looking up "git fork three way merge".
 
-- GitKraken: That's what I use at the moment. It has a somewhat decent "undo" button, which should be standard everywhere. Issues include its startup time, its price (subscription model), the fact that it's slow when discarding thousands of changed files at once, ...
+- GitKraken: That's what I use at the moment. It has a somewhat decent "undo" button, which should be standard in all Git clients. Issues include its startup time, its price (subscription model), the fact that it's slow when discarding thousands of changed files at once, ...
 
 - Most 3rd party GUIs out there ([kudos to Git for maintaining a lovely list](https://git-scm.com/downloads/guis)) are either quite limited, abandoned, un-fun to use, are expensive paid software, only work on one operating system or have some combination of factors that make it a no-go. I'd know, I've checked out most of them. *If there's one that you think deserves a mention, do send it my way!*
  
