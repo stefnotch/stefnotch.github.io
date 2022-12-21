@@ -19,7 +19,7 @@
 
 | Term | Use this instead |
 |------|------------------|
-|      |                  |
+| Localisation     | Translation (gotta support your LGBTQ+ communities)                 |
 |      |                  |
 |      |                  |
 |      |                  |
