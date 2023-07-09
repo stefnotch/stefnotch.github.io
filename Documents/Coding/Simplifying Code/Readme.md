@@ -1,19 +1,26 @@
 # Simplifying code - the codegolf edition
 
-Someone sent me this piece of code, and rightfully complained about Javascript's string handling functions.
+Someone sent me this piece of code[^1], and rightfully complained about Javascript's string handling functions.
 
 ```js
-export function generateDisplayName(currentName){
-    if (!currentName){ return ""; }
-    if (/.*[a-y]/.test(currentName)){
-        return currentName.slice(0, -1) + String.fromCharCode(currentName.charCodeAt(currentName.length - 1) + 1);
-    } else {
-        return currentName + "a";
-    }
+export function generateDisplayName(currentName) {
+  if (!currentName) {
+    return "";
+  }
+  if (/.*[a-y]/.test(currentName)) {
+    return (
+      currentName.slice(0, -1) +
+      String.fromCharCode(currentName.charCodeAt(currentName.length - 1) + 1)
+    );
+  } else {
+    return currentName + "a";
+  }
 }
 ```
 
 The idea is to take a current name, and generate a "next name". For example, if I input "a", it outputs "b".
+
+[1]: I reformatted the code with Prettier.
 
 ## Chapter 1.
 
