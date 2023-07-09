@@ -29,7 +29,7 @@ Depending on the use-case, something like directly generating an available name 
 /** Directly generate a name from a number */
 function gen(i) {
   let alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
-  if(i < alphabet.length) {
+  if (i < alphabet.length) {
     return alphabet[i];
   } else {
     return gen(Math.floor(i / alphabet.length)) + gen(i % alphabet.length);
@@ -39,7 +39,9 @@ function gen(i) {
 
 After a bit of joking around, I went ahead and golfed it. I mean, I simplified the above code.
 ```js
-const gen = (i, abc = "abcdefghijklmnopqrstuvwxyz") => (i < abc.length ? "" : gen(Math.floor(i / abc.length), abc)) + abc[i % abc.length]
+const gen = (i, abc = "abcdefghijklmnopqrstuvwxyz") =>
+  (i < abc.length ? "" : gen(Math.floor(i / abc.length), abc)) +
+  abc[i % abc.length];
 ```
 It's shorter, therefore it's simpler. /j
 
@@ -53,15 +55,23 @@ Their code first checks if the last character is a letter. If yes, replace it wi
 So, after a bit of thinking about the problem at hand, I figured I'd take a stab at it. 
 Their original code first does a regex test, and then uses some convoluted if logic. Might as well combine that for *simplicity*.
 ```js
-const gen = name => name.replace(/[^](?<=([a-y]?))$/, (v, v1) => v1 ? String.fromCharCode(v.charCodeAt(0) + 1) : v + "a")
+const gen = (name) =>
+  name.replace(/[^](?<=([a-y]?))$/, (v, v1) =>
+    v1 ? String.fromCharCode(v.charCodeAt(0) + 1) : v + "a"
+  );
 ```
 
-But this still has the somewhat ugly and verbose `String.fromCharCode`. I think that's why they didn't want to use my solution.
+But this still has the somewhat ugly and verbose `String.fromCharCode`. I think that's why they didn't want to use this solution.
 So back to the drawing board. 
 
 Using a map and regex replacements seemed like it might lead to a semi-reasonable solution. And yes, it does indeed!
 ```js
-gen = (name, abc = new Map("abcdefghijklmnopqrstuvwxyz".split("").map((v,i,arr) => [v, arr[i+1]]))) => name.replace(/[^]$/, (matched)=>abc.get(matched)??matched+"a")
+gen = (
+  name,
+  abc = new Map(
+    "abcdefghijklmnopqrstuvwxyz".split("").map((v, i, arr) => [v, arr[i + 1]])
+  )
+) => name.replace(/[^]$/, (matched) => abc.get(matched) ?? matched + "a");
 ```
 It sadly became larger than the previous solution, so that's not obviously better. 
 
@@ -72,7 +82,11 @@ So the problem remained unsolved.
 Until today. Today I came up with a near-optimal, truly elegant solution!
 
 ```js
-gen = (name) => (name+name+"abcdefghijklmnopqrstuvwxyz").replace(/^([^]*)([^])\1(?:\2[a-z]*?\2([a-z])[a-z]*?|(\2a)[a-z]*)$/, "$1$3$4")
+gen = (name) =>
+  (name + name + "abcdefghijklmnopqrstuvwxyz").replace(
+    /^([^]*)([^])\1(?:\2[a-z]*?\2([a-z])[a-z]*?|(\2a)[a-z]*)$/,
+    "$1$3$4"
+  );
 // for something that barely resembles an explanation, look at https://regex101.com/r/nqUnO9/1
 ```
 
