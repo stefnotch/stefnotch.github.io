@@ -6,7 +6,7 @@
 ## [Url Improver](https://stefnotch.github.io/url-catpressor/)
 
 
-## [Blog?](https://stefnotch.github.io/Blog/)
+## [Blog?](https://stefnotch.github.io/blog/)
 
 <!--QuantumSheet-->
 <!--Downline-->

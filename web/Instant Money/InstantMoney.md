@@ -1,7 +1,7 @@
 **How to quickly make money**
 1. Be a software engineer
 2. Call an investor
-3. Say "*The plan is to leverage blockchain - big data synergies to accelerate the development of market disrupting, innovative SaaS solutions.*"[1]
+3. Say "*The plan is to leverage blockchain - big data synergies to accelerate the development of market disrupting, innovative AI-powered SaaS solutions.*"[1]
 4. ???
 5. Profit
 
