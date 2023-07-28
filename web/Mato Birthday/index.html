@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Home</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+      }
+      body {
+        background: linear-gradient(skyblue, khaki);
+      }
+      .card {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        perspective: 200vmin;
+        transform-style: preserve-3d;
+        transform: rotateX(25deg) translateZ(-10vmin);
+        user-select: none;
+      }
+      .card-left {
+        position: relative;
+        background: transparent;
+        width: 50vmin;
+        height: calc(50vmin * 1.4142);
+        transform-style: preserve-3d;
+        cursor: pointer;
+      }
+      .card-right {
+        position: relative;
+        background: transparent;
+        width: 50vmin;
+        height: calc(50vmin * 1.4142);
+        transform-style: preserve-3d;
+      }
+      .card-side {
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+      .front {
+        background-color: #e0b12f;
+        transform: translateZ(1px);
+      }
+      .back {
+        background-color: #2fe0a5;
+        transform: translateZ(-1px) rotateY(180deg);
+      }
+      .card-left {
+        transform-origin: right;
+        transform: rotateY(175deg);
+      }
+    </style>
+    <style>
+      .card-left .back {
+        text-align: center;
+        font-size: calc(50vmin * 0.178);
+        font-weight: bold;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+    </style>
+
+    <style>
+      .drag-hint {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        color: rgb(113, 113, 113);
+      }
+    </style>
+    <!-- TODO:
+    - shadows
+    - fancy borders
+    - Javascript so that you can drag/swipe the card open
+    - "Happy birthday to our dearest Mato!", though at first it should say "Happy birthday to Mato!"
+    - From: Names from people
+    - SVG fonts
+    - random pictures of cats and tomatoes
+
+    - Particles
+    -->
+  </head>
+  <body>
+    <div class="card">
+      <div class="card-left">
+        <div class="front card-side">inside</div>
+        <div class="back card-side"><br /><br />To: Mato</div>
+      </div>
+      <div class="card-right">
+        <div class="front card-side">
+          insert text here
+          <span class="small-tomato">🍅</span>
+        </div>
+        <div class="back card-side">
+          easter egg - this side is never visible
+        </div>
+      </div>
+    </div>
+
+    <div class="drag-hint">
+      <p>⮜ Drag to open</p>
+    </div>
+
+    <script>
+      const card = document.querySelector(".card");
+      const cardLeft = card.querySelector(".card-left");
+      let startPosition = 0;
+      let startAngle = 175;
+      let cardAngle = 175;
+
+      cardLeft.addEventListener("pointerdown", (ev) => {
+        startPosition = ev.clientX;
+        startAngle = cardAngle;
+        cardLeft.setPointerCapture(ev.pointerId);
+      });
+      cardLeft.addEventListener("pointermove", (ev) => {
+        const dx = ev.clientX - startPosition;
+        cardAngle = clamp(startAngle + dx * 1, 0, 178);
+        cardLeft.style.transform = `rotateY(${cardAngle}deg)`;
+      });
+
+      function clamp(x, min, max) {
+        return Math.min(Math.max(x, min), max);
+      }
+    </script>
+  </body>
+</html>
