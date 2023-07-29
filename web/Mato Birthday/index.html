@@ -24,21 +24,27 @@
         transform-style: preserve-3d;
         transform: rotateX(25deg) translateZ(-10vmin);
         user-select: none;
+        --card-width: 45vmin;
       }
       .card-left {
         position: relative;
         background: transparent;
-        width: 50vmin;
-        height: calc(50vmin * 1.4142);
+        width: var(--card-width);
+        height: calc(var(--card-width) * 1.4142);
         transform-style: preserve-3d;
         cursor: pointer;
       }
       .card-right {
         position: relative;
         background: transparent;
-        width: 50vmin;
-        height: calc(50vmin * 1.4142);
+        width: var(--card-width);
+        height: calc(var(--card-width) * 1.4142);
         transform-style: preserve-3d;
+      }
+      @media (orientation: landscape) {
+        .card {
+          --card-width: calc(min(100vh * 0.6, 45vw));
+        }
       }
       .card-side {
         height: 100%;
@@ -47,6 +53,7 @@
         left: 0;
         right: 0;
         bottom: 0;
+        padding: 6px;
       }
       .front {
         background-color: #e0b12f;
@@ -81,15 +88,22 @@
       }
       .card-right {
         transform-origin: left;
-        transform: rotateY(-5deg);
+        transform: translateX(-1px) rotateY(-5deg);
       }
     </style>
     <style>
-      .card-left .back {
+      .card .main-side {
         text-align: center;
-        font-size: calc(50vmin * 0.178);
+        font-size: calc(var(--card-width) * 0.178);
         font-weight: bold;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      .card .small-tomato {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        transform: rotate(-25deg);
+        font-size: calc(var(--card-width) * 0.06);
       }
     </style>
 
@@ -115,26 +129,49 @@
         /*display: none;*/
         user-select: none;
         pointer-events: none;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+    </style>
+    <style>
+      #canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        user-select: none;
+        pointer-events: none;
+        width: 100%;
+        height: 100%;
       }
     </style>
     <!-- TODO:
+Mato likes: Terraria, Cats, Kebap, Mato Cola, 420
+Randomly replace Mato with Mango
+
     - shadows
     - fancy borders
     - From: Names from people
     - SVG fonts
-    - random pictures of cats and tomatoes
     - Particles
+
+    - https://www.google.com/search?q=terraria+confetti+cannon&tbm=isch&ved=2ahUKEwiKhPb9j7SAAxUC3KQKHf5tBwYQ2-cCegQIABAA&sclient=img&client=firefox-b-d#imgrc=jHz__H398Av_dM
+    - https://forums.terraria.org/index.php?threads/to-terraria-with-love-contest-entry-thread.105250/page-2
     -->
   </head>
   <body>
     <div class="card">
       <div class="card-left">
         <div class="front card-side">inside</div>
-        <div class="back card-side"><br /><br />To: Mato</div>
+        <div class="back card-side">
+          <div class="main-side">
+            <br /><br /><span style="white-space: nowrap">To: Mato</span>
+          </div>
+        </div>
       </div>
       <div class="card-right">
         <div class="front card-side">
-          insert text here
+          insert picture here
           <span class="small-tomato">🍅</span>
         </div>
         <div class="back card-side">
@@ -145,7 +182,7 @@
 
     <div class="happy-birthday-message">
       <div>
-        <h1>Happy birthday!</h1>
+        <h1><img src="./assets/terraria-happy-birthday.png" /></h1>
         <h2 class="happy-birthday-message-subtitle"></h2>
       </div>
     </div>
@@ -154,7 +191,10 @@
       <p>⮜ Drag to open</p>
     </div>
 
-    <script>
+    <canvas id="canvas"></canvas>
+
+    <script type="module">
+      import { ConfettiDrawer } from "./src/confetti.js";
       const card = document.querySelector(".card");
       const cardLeft = card.querySelector(".card-left");
       let pointerStart = null;
@@ -231,14 +271,35 @@
       );
       let cardOpenTime = null;
 
+      const canvas = document.querySelector("#canvas");
+      const ctx = canvas.getContext("2d");
+      ctx.imageSmoothingEnabled = false;
+      const confettiDrawer = new ConfettiDrawer(ctx);
+
       function render() {
         let isCardOpen = cardAngle < 70;
         if (isCardOpen) {
-          happyBirthdayMessage.style.transition = "opacity 0.5s ease-in-out";
-          happyBirthdayMessage.style.opacity = "1";
-          happyBirthdayMessageSubtitle.textContent = "To Mato!";
           if (cardOpenTime === null) {
             cardOpenTime = Date.now();
+            happyBirthdayMessage.style.transition = "opacity 0.5s ease-in-out";
+            happyBirthdayMessage.style.opacity = "1";
+            happyBirthdayMessageSubtitle.textContent = "To Mato!";
+            confettiDrawer.addConfetti(
+              ctx,
+              canvas.width * 0.5,
+              canvas.height / 2,
+              -8,
+              -8,
+              100
+            );
+            confettiDrawer.addConfetti(
+              ctx,
+              canvas.width * 0.5,
+              canvas.height / 2,
+              8,
+              -8,
+              100
+            );
           } else if (Date.now() - cardOpenTime > 800) {
             let deltaSeconds = (Date.now() - cardOpenTime - 800) / 1000;
             let animationFrames = [
@@ -272,6 +333,18 @@
           happyBirthdayMessage.style.transition = "";
           happyBirthdayMessage.style.opacity = "0";
         }
+
+        if (
+          Math.round(canvas.width) !== Math.round(window.innerWidth) ||
+          Math.round(canvas.height) !== Math.round(window.innerHeight)
+        ) {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        confettiDrawer.render(ctx);
         requestAnimationFrame(render);
       }
       requestAnimationFrame(render);
