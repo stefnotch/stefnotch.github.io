@@ -263,6 +263,8 @@ Randomly replace Mato with Mango
         };
       }
 
+      const degToRad = (deg) => (deg * Math.PI) / 180;
+
       const happyBirthdayMessage = document.querySelector(
         ".happy-birthday-message"
       );
@@ -270,7 +272,6 @@ Randomly replace Mato with Mango
         ".happy-birthday-message-subtitle"
       );
       let cardOpenTime = null;
-
       const canvas = document.querySelector("#canvas");
       const ctx = canvas.getContext("2d");
       ctx.imageSmoothingEnabled = false;
@@ -288,8 +289,9 @@ Randomly replace Mato with Mango
               ctx,
               canvas.width * 0.5,
               canvas.height / 2,
-              -8,
-              -8,
+              8,
+              degToRad(90 + 45),
+              degToRad(45),
               100
             );
             confettiDrawer.addConfetti(
@@ -297,7 +299,8 @@ Randomly replace Mato with Mango
               canvas.width * 0.5,
               canvas.height / 2,
               8,
-              -8,
+              degToRad(90 - 45),
+              degToRad(45),
               100
             );
           } else if (Date.now() - cardOpenTime > 800) {

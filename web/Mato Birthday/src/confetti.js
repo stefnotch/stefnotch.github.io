@@ -66,11 +66,13 @@ export class ConfettiDrawer {
     this.confettis = [];
   }
 
-  addConfetti(ctx, x, y, dx, dy, count) {
+  addConfetti(ctx, x, y, velocity, angle, spread, count) {
     for (let i = 0; i < count; i++) {
       const confettiImage = confettis[Math.floor(Math.random() * confettis.length)];
-      const velocityX = Math.random() * dx + dx / 2;
-      const velocityY = Math.random() * dy + dy / 2;
+      const confettiVelocity = Math.random() * velocity + velocity / 2;
+      const confettiAngle = -angle + Math.random() * spread - spread / 2;
+      const velocityX = Math.cos(confettiAngle) * confettiVelocity;
+      const velocityY = Math.sin(confettiAngle) * confettiVelocity;
       const rotation = Math.random() * Math.PI * 2;
       const rotationVelocity = Math.random() * 0.1 - 0.05;
       const gravity = Math.random() * 0.1 + 0.1;
