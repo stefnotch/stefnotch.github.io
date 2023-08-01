@@ -14,6 +14,7 @@
       }
       body {
         background: linear-gradient(skyblue, khaki);
+        --card-width: 45vmin;
       }
       .card {
         height: 100%;
@@ -24,11 +25,9 @@
         transform-style: preserve-3d;
         transform: rotateX(25deg) translateZ(-10vmin);
         user-select: none;
-        --card-width: 45vmin;
       }
       .card-left {
         position: relative;
-        background: transparent;
         width: var(--card-width);
         height: calc(var(--card-width) * 1.4142);
         transform-style: preserve-3d;
@@ -36,13 +35,12 @@
       }
       .card-right {
         position: relative;
-        background: transparent;
         width: var(--card-width);
         height: calc(var(--card-width) * 1.4142);
         transform-style: preserve-3d;
       }
       @media (orientation: landscape) {
-        .card {
+        body {
           --card-width: calc(min(100vh * 0.6, 45vw));
         }
       }
@@ -53,38 +51,44 @@
         left: 0;
         right: 0;
         bottom: 0;
-        padding: 6px;
       }
       .front {
-        background-color: #e0b12f;
         transform: translateZ(1px);
         backface-visibility: hidden;
       }
       .back {
-        background-color: #2fe0a5;
         transform: translateZ(-1px) rotateY(180deg);
       }
       .card-left {
         transform-origin: right;
         transform: rotateY(170deg);
       }
+      .card-left .back {
+        background: url("./assets/paper-texture-cropped.jpg"), #f6f6f6;
+        background-size: cover;
+      }
       .card-left .front {
         background: linear-gradient(
-          to right,
-          #e0b12f 0%,
-          #e0b12f 70%,
-          #dcae2f 99%,
-          #d1a631 100%
-        );
+            to right,
+            rgb(255, 255, 255, 10%) 0%,
+            rgb(243, 243, 243, 30%) 70%,
+            rgba(240, 240, 240, 0.6) 99%,
+            rgba(219, 219, 219, 0.7) 100%
+          ),
+          url("./assets/paper-texture-cropped.jpg"), #f6f6f6;
+        background-size: cover;
       }
       .card-right .front {
         background: linear-gradient(
-          to left,
-          #e0b12f 0%,
-          #e0b12f 70%,
-          #dcae2f 99%,
-          #d1a631 100%
-        );
+            to left,
+            rgb(255, 255, 255, 10%) 0%,
+            rgb(243, 243, 243, 30%) 70%,
+            rgb(230, 230, 230, 60%) 99%,
+            rgb(192, 192, 192, 70%) 100%
+          ),
+          url("./assets/paper-texture-cropped.jpg"), #f6f6f6;
+        background-size: cover;
+        background-position: top;
       }
       .card-right {
         transform-origin: left;
@@ -134,14 +138,56 @@
         user-select: none;
         pointer-events: none;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-size: 2em;
+        font-size: calc(2vw);
         filter: drop-shadow(30px 50px 4px #00000036);
         opacity: 0;
+        transform: translateY(0px);
       }
       .happy-birthday-message h1,
       .happy-birthday-message h2 {
         padding: 0;
         margin: 0;
+      }
+    </style>
+    <style>
+      .clip-photos {
+        transform: translateZ(1px);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        clip-path: polygon(2px -500%, 500% -500%, 500% 500%, 2px 500%);
+      }
+      .card-right .photo,
+      .card-right .photo-mirror {
+        position: absolute;
+        width: calc(var(--card-width) * 0.6);
+        height: calc(var(--card-width) * 0.8);
+        transition: transform 0.3s ease-out;
+        background: white;
+      }
+      .card-right .photo {
+        top: 0;
+        left: 0;
+        transform: rotate(-25deg) translate(10px, 50px);
+        box-shadow: -4px 1px 5px 0px #e5e5e5, 3px 3px 5px 0px #adadad;
+      }
+      .card-right .photo .img-container {
+        padding: 16px;
+        padding-bottom: 32px;
+      }
+      .card-right .photo img,
+      .card-right .photo-mirror img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .card-right .photo-mirror {
+        top: 0;
+        left: calc(var(--card-width) * -0.6);
+        transform: rotate(25deg) translate(-10px, 50px);
+        box-shadow: 3px 3px 5px 0px #292929;
       }
     </style>
     <style>
@@ -162,12 +208,12 @@ Mato likes: Terraria, Cats, Kebap, Mato Cola, 420
 Randomly replace Mato with Mango
 
     - shadows
-    - fancy borders
+    - fancy borders https://www.google.com/search?q=css+golden+frame&client=firefox-b-m&tbm=isch&prmd=ivsn&ved=2ahUKEwj394-jsrSAAxW-jZUCHSg3BlIQ_AUoAXoECAQQAQ&dpr=2.61#imgrc=3zxP4VMgPW__kM
+    https://codepen.io/yuhomyan/pen/jOqvjZq
+    https://codepen.io/chilliconcode/pen/OWxqYR
     - From: Names from people
     - SVG fonts
-    - Particles
 
-    - https://www.google.com/search?q=terraria+confetti+cannon&tbm=isch&ved=2ahUKEwiKhPb9j7SAAxUC3KQKHf5tBwYQ2-cCegQIABAA&sclient=img&client=firefox-b-d#imgrc=jHz__H398Av_dM
     - https://forums.terraria.org/index.php?threads/to-terraria-with-love-contest-entry-thread.105250/page-2
     -->
   </head>
@@ -188,6 +234,15 @@ Randomly replace Mato with Mango
         </div>
         <div class="back card-side">
           easter egg - this side is never visible
+        </div>
+
+        <div class="clip-photos">
+          <div class="photo">
+            <div class="img-container">
+              <img src="./assets/picture-frame/mato-cola.webp" />
+            </div>
+          </div>
+          <div class="photo-mirror">bb</div>
         </div>
       </div>
     </div>
@@ -281,6 +336,14 @@ Randomly replace Mato with Mango
         };
       }
 
+      const pictures = ["./assets/picture-frame/mato-cola.jpg"];
+      [...document.querySelectorAll(".clip-photos")].forEach(
+        (photoContainer) => {
+          const photo = photoContainer.querySelector(".photo");
+          const photoMirror = photoContainer.querySelector(".photo-mirror");
+        }
+      );
+
       const degToRad = (deg) => (deg * Math.PI) / 180;
 
       const happyBirthdayMessage = document.querySelector(
@@ -300,9 +363,12 @@ Randomly replace Mato with Mango
         if (isCardOpen) {
           if (cardOpenTime === null) {
             cardOpenTime = Date.now();
-            happyBirthdayMessage.style.transition = "opacity 0.5s ease-in-out";
+            happyBirthdayMessage.style.transition =
+              "opacity 0.5s ease-in-out, transform 0.7s 2.0s ease-in-out";
             happyBirthdayMessage.style.opacity = "1";
-            happyBirthdayMessageSubtitle.textContent = "To Mato!";
+            happyBirthdayMessage.style.transform =
+              "translateY(calc(var(--card-width) * -0.5))";
+            happyBirthdayMessageSubtitle.textContent = "ToMato!";
             confettiDrawer.addConfetti(
               ctx,
               canvas.width * 0.5,
@@ -321,9 +387,10 @@ Randomly replace Mato with Mango
               degToRad(45),
               100
             );
-          } else if (Date.now() - cardOpenTime > 800) {
-            let deltaSeconds = (Date.now() - cardOpenTime - 800) / 1000;
+          } else if (Date.now() - cardOpenTime > 2100) {
+            let deltaSeconds = (Date.now() - cardOpenTime - 2100) / 1000;
             let animationFrames = [
+              "ToMato!",
               "To Mato!",
               "To  Mato!",
               "To o Mato!",
@@ -353,6 +420,7 @@ Randomly replace Mato with Mango
           cardOpenTime = null;
           happyBirthdayMessage.style.transition = "";
           happyBirthdayMessage.style.opacity = "0";
+          happyBirthdayMessage.style.transform = "translateY(0)";
         }
 
         if (
