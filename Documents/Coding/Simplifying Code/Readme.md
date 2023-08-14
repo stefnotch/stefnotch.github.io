@@ -49,11 +49,11 @@ The author of the original code didn't seem to be too impressed by this though.
 
 ## Chapter 2.
 
-Maybe directly generating a name from a number didn't fit their use case. Well, time to write a simpler version of their code that attempts to preserve as much of the behaviour as possible.
-Their code first checks if the last character is a letter. If yes, replace it with the next letter. If not, just append a letter.
+Maybe directly generating a name from a number didn't fit their use case. Well, time to write a simpler version of their code.
+Their code checks if the last character is a letter. If yes, replace it with the next letter. If not, just append a letter.
 
-So, after a bit of thinking about the problem at hand, I figured I'd take a stab at it. 
-Their original code first does a regex test, and then uses some convoluted if logic. Might as well combine that for *simplicity*.
+After a bit of thinking about the problem at hand, I figured I'd take a stab at it. 
+The original first does a regex test and then some convoluted branching logic. Might as well combine as much as possible for simplicity.
 ```js
 const gen = (name) =>
   name.replace(/[^](?<=([a-y]?))$/, (v, v1) =>
