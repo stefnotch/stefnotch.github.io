@@ -1,0 +1,9 @@
+{
+    // https://baudelaire.cstef.dev/lookup/typst-modules/
+    // It's not great, https://github.com/Myriad-Dreamin/tinymist/issues/2304 needs fixing
+    "tinymist.typstExtraArgs": [
+        "--package-path", 
+        "D:\\git\\system\\stefnotch.github.io\\.baudelaire\\generated\\packages",
+        "--features=html",
+    ]
+}

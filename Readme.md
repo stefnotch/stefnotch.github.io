@@ -1,12 +1,20 @@
-# My works
-## [Trello Board View](https://stefnotch.github.io/trello-board-view/)
+# Stefnotch's Bloggy Blog!
 
-## [Shakespeare's Cats](https://stefnotch.github.io/shakespeares-cats/)
-
-## [Url Improver](https://stefnotch.github.io/url-catpressor/)
+> [_Enter the blogosphere on the information superhighwayyyyyyyy_](https://stefnotch.github.io)
 
 
-## [Blog?](https://stefnotch.github.io/blog/)
 
-<!--QuantumSheet-->
-<!--Downline-->
+## Tooling
+
+Written with Typst, because it sparks joy.
+
+For the blog site generation, it uses [baudelaire](https://baudelaire.cstef.dev/).
+
+```
+baudelaire serve
+```
+
+
+<!-- Run `baudelaire serve` for a live preview, `baudelaire new posts/my-post` to
+scaffold a post with the frontmatter its collection expects, and
+`baudelaire build --profile prod` when you are ready to publish. -->
