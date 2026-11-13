@@ -23,10 +23,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: cargo-bins/cargo-binstall@main
+        with:
+            version: "1.27.0"
+            
       - name: install baudelaire
-        run: |
-          curl -fsSL https://baudelaire.cstef.dev/install.sh | sh
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        run: cargo binstall baudelaire
 
       - name: restore build cache
         uses: actions/cache@v6
