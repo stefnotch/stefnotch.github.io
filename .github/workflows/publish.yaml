@@ -1,0 +1,45 @@
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: install baudelaire
+        run: |
+          curl -fsSL https://baudelaire.cstef.dev/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: restore build cache
+        uses: actions/cache@v6
+        with:
+          path: .baudelaire
+          key: baudelaire-${{ hashFiles('content/**', 'assets/**', 'templates/**', 'config.kdl') }}
+          restore-keys: baudelaire-
+
+      - run: baudelaire build
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: public
+
+      - id: deploy
+        uses: actions/deploy-pages@v5
