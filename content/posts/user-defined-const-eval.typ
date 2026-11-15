@@ -324,5 +324,5 @@ So it may be worth to make that part an opt-in feature.
 
 wgsl-analyzer would automatically do that kind of tracking and automatically infer `where` clauses for functions.
 And if it detects obvious violations, it reports them.
-Later, wgsl-analyzer would get an expression reducer so that it can detect more obvious violations. With the eventual goal being that every `const` is fully checked. 🚀
+Later, wgsl-analyzer would get an expression reducer so that it can detect more obvious violations.#footnote[And postconditions? Those would give the language server even more info to work with.] With the eventual goal being that every `const` is fully checked. 🚀
 
