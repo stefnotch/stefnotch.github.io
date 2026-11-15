@@ -30,7 +30,9 @@ That would remove errors after all, if there were any.
 
 It first has to do const-eval and only then is it allowed to eliminate the dead code!#footnote[Unless of course the WGSL implementation decides to say _we make no guarantees about how we compile incorrect code_. That's dirty, but it might be good enough until const-eval is fully implemented.]
 
-Finally, if pipeline-overridable constants are involved in an expression, then one cannot const-eval it beforehand. In that case, it's safest to keep the code preserved as-is. In the following example, removing `foo` would observably change the behaviour of an application, even if `foo` is never called.
+This is similar to how you cannot just remove code that doesn't type check.
+
+Finally, there is one extra challenge. If pipeline-overridable constants are involved in an expression, then one cannot const-eval it beforehand. In that case, it's safest to keep the code preserved as-is. In the following example, removing `foo` would observably change the behaviour of an application, even if `foo` is never called.
 ```wgsl
 override maybe_zero: u32 = 0;
 fn foo() {
@@ -72,7 +74,7 @@ We can
 Where accuracy is implementation defined, within some given bounds.
 
 This means that simplifying a const expression can change its observable value.
-So expressions such as `array<f32, u32(x * y / y)> == array<f32, u32(x)>` may either be true or false#footnote[The author didn't check whether it is actually possible for them to diverge enough, given the WGSL accuracy requirements. But the general principle holds.]
+So comparing whether two types are equivalent `array<f32, u32(x * y / y)> == array<f32, u32(x)>` may either pass type checking or not.#footnote[The author didn't check whether it is actually possible for them to diverge enough, given the WGSL accuracy requirements. But the general principle holds.]
 
 So, a hypothetical perfect language server would have to do one of the following
 - compute floats while keeping track of the upper and lower bounds. And use that to compare types
@@ -108,6 +110,7 @@ Or one could want to do some bit-level manipulation.
 ```
 
 These `@const` functions require const-eval, including flow control (`if`, `for`, `switch`, ...).
+These `@const` functions have one rule: Their bodies may only contain code that can be evaluated at compile time.
 
 An example for flow-control in a `@const` function is for choosing an SMAA preset.
 ```wgsl
