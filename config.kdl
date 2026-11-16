@@ -82,6 +82,7 @@ serve {
   bind "127.0.0.1"
   open #true
   watch #true
+  editor "code.cmd" "." "--goto" "{file}:{line}:{column}"
 }
 
 profiles {
