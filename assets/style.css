@@ -164,3 +164,7 @@ pre {
 .site-footer a {
   color: inherit;
 }
+
+section[role="doc-endnotes"] > ol > li > sup {
+  margin-right: 4px;
+}
