@@ -493,6 +493,7 @@ Let us, for a moment, imagine using `f16` before enabling it. We'll do it by pla
 enable f16;
 ```
 That would fail to parse, because the `h` suffix is not allowed at the time of parsing.
+The behaviour of this actually differs in naga and wgsl-analyzer. In naga, this would be a lexing failure. In wgsl-analyzer, the lexer is permissive and runs in a single up-front pass. So the lexer will accept `8h` and a later stage will then compare it against the set of `enable` extensions.
 
 And the following snippet has the interesting property that it would successfully parse.
 ```wgsl
